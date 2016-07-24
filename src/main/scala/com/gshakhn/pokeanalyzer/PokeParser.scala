@@ -8,7 +8,7 @@ class PokeParser(inputFile: Path) {
 
   private val intRegex = """(\d+)""".r
 
-  private def name: String = {
+  private lazy val name: String = {
     val outputDir = tmp.dir()
     % convert(inputFile,
       "-crop", "400x75+125+500",
@@ -17,7 +17,7 @@ class PokeParser(inputFile: Path) {
     nameResult.out.string.trim.toUpperCase
   }
 
-  private def cp: Int = {
+  private lazy val cp: Int = {
     val outputDir = tmp.dir()
     % convert(inputFile,
       "-crop", "175x50+200+70",
@@ -28,7 +28,7 @@ class PokeParser(inputFile: Path) {
     intRegex.findFirstIn(cpResult.out.string.trim).get.toInt
   }
 
-  private def hp: Int = {
+  private lazy val hp: Int = {
     val outputDir = tmp.dir()
     % convert(inputFile,
       "-crop", "150x25+250+600",
@@ -37,7 +37,7 @@ class PokeParser(inputFile: Path) {
     intRegex.findFirstIn(hpResult.out.string.trim).get.toInt
   }
 
-  private def dust: Int = {
+  private lazy val dust: Int = {
     val outputDir = tmp.dir()
     % convert(inputFile,
       "-crop", "75x30+350+900",
