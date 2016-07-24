@@ -46,7 +46,9 @@ object Main extends App {
       )
   }
 
-  println(pokemon)
+  pokemon.foreach(poke =>
+    write.append(cwd/"pokemon-info.txt", s"${poke.name},${poke.cp},${poke.hp},${poke.powerupCost}\n")
+  )
 }
 
 case class InputToOutput(input: Path, output: Path)
