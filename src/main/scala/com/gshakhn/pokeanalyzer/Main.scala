@@ -10,7 +10,8 @@ object Main extends App {
   ls ! inputDirectory foreach { inputFile =>
     try {
       val pokemon = new PokeParser(inputFile).parse
-      write.append(cwd/"pokemon-info.txt", s"${pokemon.name},${pokemon.cp},${pokemon.hp},${pokemon.dust}\n")
+      val perfectionRange = new PokeIVCalculator(23).perfectionRange(pokemon)
+      write.append(cwd/"pokemon-info.txt", s"${pokemon.name},${pokemon.cp},${pokemon.hp},${pokemon.dust},${perfectionRange._1} - ${perfectionRange._2}\n")
     } catch {
       case NonFatal(e) => println(s"Could not parse ${inputFile.last}")
     }

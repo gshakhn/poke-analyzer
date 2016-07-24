@@ -1,9 +1,14 @@
 package com.gshakhn.pokeanalyzer
 
 class PokeIVCalculator(trainerLevel: Int) {
-  def calculate(info: PokeInfo): Seq[PokeIV] = {
-    val zubat = GameData.data.find(_.name == "Zubat").get
-    println(zubat)
+  def perfectionRange(info: PokeInfo): (Double, Double) = {
+    val ivs = potentialIVs(info)
+    val perfection = ivs.map(_.perfection)
+    (perfection.min, perfection.max)
+  }
+
+  def potentialIVs(info: PokeInfo): Seq[PokeIV] = {
+    val dataForPokemon = GameData.data.find(_.name.equalsIgnoreCase(info.name)).get
     for {
       doublePokeLevel <- 2 to (trainerLevel * 2)
       pokeLevel = doublePokeLevel / 2.0
@@ -11,8 +16,8 @@ class PokeIVCalculator(trainerLevel: Int) {
       potentialDefense <- 1 to 15
       potentialStamina <- 1 to 15
       iv = PokeIV(pokeLevel, potentialAttack, potentialDefense, potentialStamina)
-      potentialHp = hp(iv, zubat) if potentialHp == info.hp
-      potentialCp = cp(iv, zubat) if potentialCp == info.cp
+      potentialHp = hp(iv, dataForPokemon) if potentialHp == info.hp
+      potentialCp = cp(iv, dataForPokemon) if potentialCp == info.cp
     } yield iv
   }
 
