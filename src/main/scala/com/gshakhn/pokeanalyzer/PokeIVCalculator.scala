@@ -1,8 +1,5 @@
 package com.gshakhn.pokeanalyzer
 
-import ammonite.ops.{Path, _}
-import com.github.tototoshi.csv.{CSVReader, TSVFormat}
-
 class PokeIVCalculator(trainerLevel: Int) {
   def calculate(info: PokeInfo): Seq[PokeIV] = {
     val zubat = GameData.data.find(_.name == "Zubat").get
