@@ -7,3 +7,5 @@ scalaVersion := "2.11.8"
 libraryDependencies += "com.lihaoyi" %% "ammonite-ops" % "0.6.2"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0-RC4" % "test"
+
+libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.3"
