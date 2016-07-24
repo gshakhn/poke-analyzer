@@ -21,10 +21,10 @@ class PokeParser(inputFile: Path) {
     val outputDir = tmp.dir()
     % convert(inputFile,
       "-crop", "175x50+200+70",
-      "-fill", "black", "+opaque", "white",
+      "-fuzz", "15%", "-fill", "black", "+opaque", "white",
       "-negate",
       outputDir / "cp.png")
-    val cpResult = %% tesseract("-psm", "7", outputDir / "cp.png", "stdout", "digits")
+    val cpResult = %% tesseract("-psm", "7", outputDir / "cp.png", "stdout", "-c", "tessedit_char_whitelist=CP0123456789")
     intRegex.findFirstIn(cpResult.out.string.trim).get.toInt
   }
 
