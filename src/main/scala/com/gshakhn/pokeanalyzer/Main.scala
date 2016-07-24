@@ -11,7 +11,9 @@ object Main extends App {
     try {
       val pokemon = new PokeParser(inputFile).parse
       val perfectionRange = new PokeIVCalculator(23).perfectionRange(pokemon)
-      write.append(cwd/"pokemon-info.txt", s"${pokemon.name},${pokemon.cp},${pokemon.hp},${pokemon.dust},${perfectionRange._1} - ${perfectionRange._2}\n")
+      val min = perfectionRange._1.formatted("%.2f")
+      val max = perfectionRange._2.formatted("%.2f")
+      write.append(cwd/"pokemon-info.txt", s"${pokemon.name},${pokemon.cp},${pokemon.hp},${pokemon.dust},$min - $max\n")
     } catch {
       case NonFatal(e) => println(s"Could not parse ${inputFile.last}")
     }
