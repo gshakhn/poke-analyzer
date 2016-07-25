@@ -9,7 +9,7 @@ stages:
 
 test:
   stage: test
-  script: "sbt test"
+  script: "sbt -sbt-dir /cache/.sbt -ivy /cache/.ivy2 test"
 
 package:
   stage: package
@@ -17,7 +17,3 @@ package:
   artifacts:
     paths:
       - target/scala-2.11/poke-analyzer-assembly-*.jar
-
-cache:
-  paths:
-    - .ivy2/
