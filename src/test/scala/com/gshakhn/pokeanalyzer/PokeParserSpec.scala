@@ -19,6 +19,6 @@ class PokeParserSpec extends FunSpec with Matchers {
     val expectedCp = data(1)
     val expectedHp = data(2)
     val expectedDust = data(3)
-    PokeInfo(expectedName, expectedCp.toInt, expectedHp.toInt, expectedDust.toInt)
+    PokeInfo(expectedName, expectedCp.toInt, expectedHp.toInt, expectedDust.toInt, 0)
   }
 }

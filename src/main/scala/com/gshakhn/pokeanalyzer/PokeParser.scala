@@ -2,9 +2,12 @@ package com.gshakhn.pokeanalyzer
 
 import ammonite.ops._
 import ammonite.ops.ImplicitWd._
+import com.sksamuel.scrimage.Image
+
+import scala.collection.immutable.TreeMap
 
 class PokeParser(inputFile: Path) {
-  def parse: PokeInfo = PokeInfo(name, cp, hp, dust)
+  def parse: PokeInfo = PokeInfo(name, cp, hp, dust, level)
 
   private val intRegex = """(\d+)""".r
 
@@ -45,6 +48,47 @@ class PokeParser(inputFile: Path) {
     val dustResult = %% tesseract("-psm", "7", outputDir / "dust.png", "stdout")
     dustResult.out.string.trim.toInt
   }
+
+  private def potentialPokemonLevel: Int = 23 * 2 + 1
+
+  lazy val level: Double = {
+    degreesToLevel.filterKeys(_ < degree).last._2
+  }
+
+  private lazy val degree: Double = {
+    val outputDir = tmp.dir()
+    % convert(inputFile,
+      "-crop", "520x260+60+145",
+      outputDir / "powerbar.png")
+    val image = Image.fromPath((outputDir/"powerbar.png").toNIO)
+    val degreeAtEnd = 1.to(180).find { degree =>
+      val (x, y) = cartesian(degree)
+      val color = image.color(x, y)
+      color.red < 240 && color.green < 240 && color.blue < 240
+    }
+    degreeAtEnd.get
+  }
+
+  private lazy val degreesToLevel: TreeMap[Double, Double] = {
+    val data = 2.to(potentialPokemonLevel).map { doubleLevel =>
+      val realLevel = doubleLevel / 2.0
+      val levelMultiplier = GameData.multipliers(realLevel)
+      val maxMultiplier = GameData.multipliers(23)
+      // These magic constants come from looking at the source of
+      // https://jackhumbert.github.io/poke-rater and https://thesilphroad.com/research
+      // No idea where they come from
+      (levelMultiplier - 0.094) * 202.037116 / maxMultiplier -> realLevel
+    }
+    TreeMap(data.toArray: _*)
+  }
+
+  private def cartesian(degrees: Double): (Int, Int) = {
+    val x = Math.cos((1 - (degrees / 180.0)) * Math.PI) * 260
+    val y = Math.sin((1 - (degrees / 180.0)) * Math.PI) * 260
+    val xMoved = x.toInt + 260
+    val yFlipped = 260 - y.toInt
+    (Math.min(xMoved, 519), Math.min(yFlipped, 259))
+  }
 }
 
-case class PokeInfo(name: String, cp: Int, hp: Int, dust: Int)
+case class PokeInfo(name: String, cp: Int, hp: Int, dust: Int, level: Double)
