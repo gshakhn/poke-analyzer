@@ -10,7 +10,7 @@ object Main extends App {
   ls ! inputDirectory foreach { inputFile =>
     try {
       val pokemon = new ScreenshotParser(inputFile, trainerLevel).parse
-      val perfectionRange = new PokeIVCalculator(trainerLevel).perfectionRange(pokemon)
+      val perfectionRange = new IvCalculator(trainerLevel).perfectionRange(pokemon)
       val min = perfectionRange._1.formatted("%.2f")
       val max = perfectionRange._2.formatted("%.2f")
       println(s"${pokemon.name},${pokemon.cp},${pokemon.hp},${pokemon.dust},${pokemon.level}, $min - $max")

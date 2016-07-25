@@ -1,6 +1,6 @@
 package com.gshakhn.pokeanalyzer
 
-class PokeIVCalculator(trainerLevel: Int) {
+class IvCalculator(trainerLevel: Int) {
   def perfectionRange(info: IndividualPokemon): (Double, Double) = {
     val ivs = potentialIVs(info)
     val perfection = ivs.map(_.perfection)
