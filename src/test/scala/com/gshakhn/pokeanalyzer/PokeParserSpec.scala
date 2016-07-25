@@ -8,7 +8,7 @@ class PokeParserSpec extends FunSpec with Matchers {
   inputFiles.foreach { inputFile =>
     it(s"should parse ${inputFile.last}") {
       val expectedPokemon = parseExpectedData(inputFile)
-      val parser = new PokeParser(inputFile)
+      val parser = new PokeParser(inputFile, 23)
       parser.parse shouldBe expectedPokemon
     }
   }

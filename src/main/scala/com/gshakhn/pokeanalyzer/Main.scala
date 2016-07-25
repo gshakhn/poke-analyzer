@@ -9,7 +9,7 @@ object Main extends App {
   val inputDirectory = cwd / "input"
   ls ! inputDirectory foreach { inputFile =>
     try {
-      val pokemon = new PokeParser(inputFile).parse
+      val pokemon = new PokeParser(inputFile, 23).parse
       val perfectionRange = new PokeIVCalculator(23).perfectionRange(pokemon)
       val min = perfectionRange._1.formatted("%.2f")
       val max = perfectionRange._2.formatted("%.2f")

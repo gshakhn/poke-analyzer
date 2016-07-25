@@ -6,7 +6,7 @@ import com.sksamuel.scrimage.Image
 
 import scala.collection.immutable.TreeMap
 
-class PokeParser(inputFile: Path) {
+class PokeParser(inputFile: Path, trainerLevel: Int) {
   def parse: PokeInfo = PokeInfo(name, cp, hp, dust, level)
 
   private val intRegex = """(\d+)""".r
@@ -68,10 +68,10 @@ class PokeParser(inputFile: Path) {
   }
 
   private lazy val degreesToLevel: TreeMap[Double, Double] = {
-    val data = 2.to(49).map { doubleLevel =>
+    val data = 2.to((trainerLevel + 1) * 2 + 1).map { doubleLevel =>
       val realLevel = doubleLevel / 2.0
       val levelMultiplier = GameData.multipliers(realLevel)
-      val maxMultiplier = GameData.multipliers(23)
+      val maxMultiplier = GameData.multipliers(trainerLevel)
       // These magic constants come from looking at the source of
       // https://jackhumbert.github.io/poke-rater and https://thesilphroad.com/research
       // No idea where they come from
