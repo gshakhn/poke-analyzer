@@ -49,8 +49,6 @@ class PokeParser(inputFile: Path) {
     dustResult.out.string.trim.toInt
   }
 
-  private def potentialPokemonLevel: Int = 23 * 2 + 1
-
   lazy val level: Double = {
     degreesToLevel.filterKeys(_ < degree).last._2
   }
@@ -64,13 +62,13 @@ class PokeParser(inputFile: Path) {
     val degreeAtEnd = 1.to(180).find { degree =>
       val (x, y) = cartesian(degree)
       val color = image.color(x, y)
-      color.red < 240 && color.green < 240 && color.blue < 240
+      color.red < 225 && color.green < 225 && color.blue < 225
     }
     degreeAtEnd.get
   }
 
   private lazy val degreesToLevel: TreeMap[Double, Double] = {
-    val data = 2.to(potentialPokemonLevel).map { doubleLevel =>
+    val data = 2.to(49).map { doubleLevel =>
       val realLevel = doubleLevel / 2.0
       val levelMultiplier = GameData.multipliers(realLevel)
       val maxMultiplier = GameData.multipliers(23)
