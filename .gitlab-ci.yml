@@ -1,0 +1,23 @@
+image: hseeberger/scala-sbt
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq tesseract-ocr imagemagick
+
+stages:
+  test
+  package
+
+test:
+  stage: test
+  script: "sbt test"
+
+package:
+  stage: package
+  script: "sbt assembly"
+  artifacts:
+    paths:
+      - target/scala-2.11/poke-analyzer-assembly-*.jar
+
+cache:
+  paths:
+    - .ivy2/
