@@ -1,13 +1,13 @@
 package com.gshakhn.pokeanalyzer
 
-import ammonite.ops._
 import ammonite.ops.ImplicitWd._
+import ammonite.ops._
 import com.sksamuel.scrimage.Image
 
 import scala.collection.immutable.TreeMap
 
-class PokeParser(inputFile: Path, trainerLevel: Int) {
-  def parse: PokeInfo = PokeInfo(name, cp, hp, dust, level)
+class ScreenshotParser(inputFile: Path, trainerLevel: Int) {
+  def parse: IndividualPokemon = IndividualPokemon(name, cp, hp, dust, level)
 
   private val intRegex = """(\d+)""".r
 
@@ -49,44 +49,49 @@ class PokeParser(inputFile: Path, trainerLevel: Int) {
     dustResult.out.string.trim.toInt
   }
 
-  lazy val level: Double = {
-    degreesToLevel.filterKeys(_ < degree).last._2
+  private lazy val level: Double = {
+    degreesToLevel.filterKeys(_ < degreeOnCpBar).last._2
   }
 
-  private lazy val degree: Double = {
+  private lazy val degreeOnCpBar: Double = {
     val outputDir = tmp.dir()
+    val cpBarFile = outputDir / "powerbar.png"
     % convert(inputFile,
-      "-crop", "520x260+60+145",
-      outputDir / "powerbar.png")
-    val image = Image.fromPath((outputDir/"powerbar.png").toNIO)
+      "-crop", s"${imageHeight*2}x$imageHeight+60+145",
+      cpBarFile)
+    val image = Image.fromPath(cpBarFile.toNIO)
     val degreeAtEnd = 1.to(180).find { degree =>
       val (x, y) = cartesian(degree)
       val color = image.color(x, y)
-      color.red < 225 && color.green < 225 && color.blue < 225
+      val whiteThreshold = 225
+      color.red < whiteThreshold && color.green < whiteThreshold && color.blue < whiteThreshold
     }
     degreeAtEnd.get
   }
 
   private lazy val degreesToLevel: TreeMap[Double, Double] = {
-    val data = 2.to((trainerLevel + 1) * 2 + 1).map { doubleLevel =>
-      val realLevel = doubleLevel / 2.0
-      val levelMultiplier = GameData.multipliers(realLevel)
+    val maxPokemonLevel: Double = trainerLevel + 1.5
+    val potentialPokemonLevels = 2.to((maxPokemonLevel * 2).toInt).map(_ / 2.0)
+    val data = potentialPokemonLevels.map { potentialLevel =>
+      val levelMultiplier = GameData.multipliers(potentialLevel)
       val maxMultiplier = GameData.multipliers(trainerLevel)
-      // These magic constants come from looking at the source of
+      // This magic constant come from looking at the source of
       // https://jackhumbert.github.io/poke-rater and https://thesilphroad.com/research
-      // No idea where they come from
-      (levelMultiplier - 0.094) * 202.037116 / maxMultiplier -> realLevel
+      // No idea where it came from, but it seems to work
+      (levelMultiplier - GameData.multipliers(1)) * 202.037116 / maxMultiplier -> potentialLevel
     }
     TreeMap(data.toArray: _*)
   }
 
+  private val imageHeight: Int = 260
+
   private def cartesian(degrees: Double): (Int, Int) = {
-    val x = Math.cos((1 - (degrees / 180.0)) * Math.PI) * 260
-    val y = Math.sin((1 - (degrees / 180.0)) * Math.PI) * 260
-    val xMoved = x.toInt + 260
-    val yFlipped = 260 - y.toInt
-    (Math.min(xMoved, 519), Math.min(yFlipped, 259))
+    val x = Math.cos((1 - (degrees / 180.0)) * Math.PI) * imageHeight
+    val y = Math.sin((1 - (degrees / 180.0)) * Math.PI) * imageHeight
+    val xMoved = x.toInt + imageHeight
+    val yFlipped = imageHeight - y.toInt
+    (Math.min(xMoved, 2 * imageHeight - 1), Math.min(yFlipped, imageHeight - 1))
   }
 }
 
-case class PokeInfo(name: String, cp: Int, hp: Int, dust: Int, level: Double)
+case class IndividualPokemon(name: String, cp: Int, hp: Int, dust: Int, level: Double)

@@ -1,13 +1,13 @@
 package com.gshakhn.pokeanalyzer
 
 class PokeIVCalculator(trainerLevel: Int) {
-  def perfectionRange(info: PokeInfo): (Double, Double) = {
+  def perfectionRange(info: IndividualPokemon): (Double, Double) = {
     val ivs = potentialIVs(info)
     val perfection = ivs.map(_.perfection)
     (perfection.min, perfection.max)
   }
 
-  def potentialIVs(info: PokeInfo): Seq[PokeIV] = {
+  def potentialIVs(info: IndividualPokemon): Seq[PokeIV] = {
     val dataForPokemon = GameData.data.find(_.name.equalsIgnoreCase(info.name)).get
     for {
       doublePokeLevel <- 2 to (trainerLevel * 2)
