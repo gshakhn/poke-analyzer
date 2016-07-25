@@ -8,8 +8,9 @@ import com.github.tototoshi.csv.{CSVReader, TSVFormat}
   */
 object GameData {
   lazy val data = {
-    val pokemonListFile: Path = cwd / "src" / "main" / "resources" / "GAME_MASTER_POKEMON_v0_2.tsv"
-    val csvReader = CSVReader.open(pokemonListFile.toNIO.toFile)(new TSVFormat() {})
+    val baseDataStream = getClass.getResourceAsStream("/GAME_MASTER_POKEMON_v0_2.tsv")
+    val baseDataSource = scala.io.Source.fromInputStream( baseDataStream )
+    val csvReader = CSVReader.open(baseDataSource)(new TSVFormat() {})
     val allPokemon: List[Map[String, String]] = csvReader.allWithHeaders()
     csvReader.close()
     allPokemon.map { row =>
