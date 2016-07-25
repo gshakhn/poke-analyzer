@@ -9,15 +9,15 @@ import com.github.tototoshi.csv.{CSVReader, TSVFormat}
 object GameData {
   lazy val data = {
     val pokemonListFile: Path = cwd / "src" / "main" / "resources" / "GAME_MASTER_POKEMON_v0_2.tsv"
-    val foo = CSVReader.open(pokemonListFile.toNIO.toFile)(new TSVFormat() {})
-    val allPokemon: List[Map[String, String]] = foo.allWithHeaders()
-    foo.close()
+    val csvReader = CSVReader.open(pokemonListFile.toNIO.toFile)(new TSVFormat() {})
+    val allPokemon: List[Map[String, String]] = csvReader.allWithHeaders()
+    csvReader.close()
     allPokemon.map { row =>
       PokeBaseData(row("Identifier"), row("BaseAttack").toInt, row("BaseDefense").toInt, row("BaseStamina").toInt)
     }
   }
 
-  lazy val multipliers = Map(
+  lazy val cpMultiplierByLevel = Map(
     1 -> 0.0940000,
     1.5 -> 0.1351374,
     2 -> 0.1663979,

@@ -30,7 +30,7 @@ class PokeIVCalculator(trainerLevel: Int) {
       Math.pow(cpMultiplier(iv), 2) / 10
   ).toInt
 
-  def cpMultiplier(iv: PokeIV): Double = GameData.multipliers(iv.level)
+  def cpMultiplier(iv: PokeIV): Double = GameData.cpMultiplierByLevel(iv.level)
 }
 
 

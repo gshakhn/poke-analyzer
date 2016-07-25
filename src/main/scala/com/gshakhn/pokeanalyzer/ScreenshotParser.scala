@@ -73,12 +73,12 @@ class ScreenshotParser(inputFile: Path, trainerLevel: Int) {
     val maxPokemonLevel: Double = trainerLevel + 1.5
     val potentialPokemonLevels = 2.to((maxPokemonLevel * 2).toInt).map(_ / 2.0)
     val data = potentialPokemonLevels.map { potentialLevel =>
-      val levelMultiplier = GameData.multipliers(potentialLevel)
-      val maxMultiplier = GameData.multipliers(trainerLevel)
+      val levelMultiplier = GameData.cpMultiplierByLevel(potentialLevel)
+      val maxMultiplier = GameData.cpMultiplierByLevel(trainerLevel)
       // This magic constant come from looking at the source of
       // https://jackhumbert.github.io/poke-rater and https://thesilphroad.com/research
       // No idea where it came from, but it seems to work
-      (levelMultiplier - GameData.multipliers(1)) * 202.037116 / maxMultiplier -> potentialLevel
+      (levelMultiplier - GameData.cpMultiplierByLevel(1)) * 202.037116 / maxMultiplier -> potentialLevel
     }
     TreeMap(data.toArray: _*)
   }
