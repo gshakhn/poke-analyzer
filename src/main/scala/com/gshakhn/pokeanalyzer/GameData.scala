@@ -13,7 +13,7 @@ object GameData {
     val allPokemon: List[Map[String, String]] = csvReader.allWithHeaders()
     csvReader.close()
     allPokemon.map { row =>
-      PokeBaseData(row("Identifier"), row("BaseAttack").toInt, row("BaseDefense").toInt, row("BaseStamina").toInt)
+      PokemonBaseStats(row("Identifier"), row("BaseAttack").toInt, row("BaseDefense").toInt, row("BaseStamina").toInt)
     }
   }
 
@@ -100,3 +100,5 @@ object GameData {
     40.5 -> 0.7931164
   )
 }
+
+case class PokemonBaseStats(name: String, baseAttack: Int, baseDefense: Int, baseStamina: Int)

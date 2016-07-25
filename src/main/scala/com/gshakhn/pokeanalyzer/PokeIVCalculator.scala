@@ -21,9 +21,9 @@ class PokeIVCalculator(trainerLevel: Int) {
     } yield iv
   }
 
-  def hp(iv: PokeIV, base: PokeBaseData): Int = Math.floor((base.baseStamina + iv.stamina) * cpMultiplier(iv)).toInt
+  def hp(iv: PokeIV, base: PokemonBaseStats): Int = Math.floor((base.baseStamina + iv.stamina) * cpMultiplier(iv)).toInt
 
-  def cp(iv: PokeIV, base: PokeBaseData): Int = Math.floor(
+  def cp(iv: PokeIV, base: PokemonBaseStats): Int = Math.floor(
     (base.baseAttack + iv.attack) *
       Math.sqrt(base.baseStamina + iv.stamina) *
       Math.sqrt(base.baseDefense + iv.defense) *
@@ -32,9 +32,6 @@ class PokeIVCalculator(trainerLevel: Int) {
 
   def cpMultiplier(iv: PokeIV): Double = GameData.cpMultiplierByLevel(iv.level)
 }
-
-
-case class PokeBaseData(name: String, baseAttack: Int, baseDefense: Int, baseStamina: Int)
 
 case class PokeIV(level: Double, attack: Int, defense: Int, stamina: Int) {
   lazy val perfection: Double = (attack + defense + stamina) / 45.0
