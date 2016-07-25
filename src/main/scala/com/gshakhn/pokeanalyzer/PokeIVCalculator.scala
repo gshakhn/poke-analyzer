@@ -10,12 +10,10 @@ class PokeIVCalculator(trainerLevel: Int) {
   def potentialIVs(info: IndividualPokemon): Seq[CalculatedIv] = {
     val dataForPokemon = GameData.data.find(_.name.equalsIgnoreCase(info.name)).get
     for {
-      doublePokeLevel <- 2 to (trainerLevel * 2)
-      pokeLevel = doublePokeLevel / 2.0
       potentialAttack <- 1 to 15
       potentialDefense <- 1 to 15
       potentialStamina <- 1 to 15
-      iv = CalculatedIv(pokeLevel, potentialAttack, potentialDefense, potentialStamina)
+      iv = CalculatedIv(info.level, potentialAttack, potentialDefense, potentialStamina)
       potentialHp = hp(iv, dataForPokemon) if potentialHp == info.hp
       potentialCp = cp(iv, dataForPokemon) if potentialCp == info.cp
     } yield iv
