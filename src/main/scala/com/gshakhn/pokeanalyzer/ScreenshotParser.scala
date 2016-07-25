@@ -60,13 +60,12 @@ class ScreenshotParser(inputFile: Path, trainerLevel: Int) {
       "-crop", s"${imageHeight*2}x$imageHeight+60+145",
       cpBarFile)
     val image = Image.fromPath(cpBarFile.toNIO)
-    val degreeAtEnd = 1.to(180).find { degree =>
+    1.to(180).filter { degree =>
       val (x, y) = cartesian(degree)
       val color = image.color(x, y)
       val whiteThreshold = 225
-      color.red < whiteThreshold && color.green < whiteThreshold && color.blue < whiteThreshold
-    }
-    degreeAtEnd.get
+      color.red >= whiteThreshold && color.green >= whiteThreshold && color.blue >= whiteThreshold
+    }.last + 1
   }
 
   private lazy val degreesToLevel: TreeMap[Double, Double] = {
