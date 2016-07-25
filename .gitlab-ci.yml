@@ -4,8 +4,8 @@ before_script:
   - apt-get update -qq && apt-get install -y -qq tesseract-ocr imagemagick
 
 stages:
-  test
-  package
+  - test
+  - package
 
 test:
   stage: test
