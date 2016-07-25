@@ -17,6 +17,10 @@ This project analyzes screenshots from Pokemon Go to parse out the various stats
 Output will be:
 Pokemon Name, CP, HP, Dust Upgrade Cost, Level, Min Potential IV % - Max Potential IV %
 
+# Limitations
+
+Figuring out the level from the Pokemon is semi-hacky based on some magic constants I found on the internet. It might be wrong. In general, analyzing the screenshot is very error prone. There are some Pokemon (Geodude, Gengar) whose animations can cover the CP bar or even the CP text. In order to get more accurate results, you can sniff the wire and get the actual IV numbers that are passed on the server. But that may potentially break Niantic's ToS. Plus learning about OCR and image analysis was a fun Sunday project.
+
 # Future Ideas
 
 * Support more devices
