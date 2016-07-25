@@ -6,7 +6,7 @@ import ammonite.ops._
 import scala.util.control.NonFatal
 
 object Main extends App {
-  val inputDirectory = cwd / "input"
+  val inputDirectory = Path(args(0))
   ls ! inputDirectory foreach { inputFile =>
     try {
       val pokemon = new ScreenshotParser(inputFile, 23).parse
